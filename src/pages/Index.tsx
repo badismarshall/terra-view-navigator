@@ -1,12 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import Map from '../components/Map';
+import Sidebar from '../components/Sidebar';
+import ToolBar from '../components/ToolBar';
+import StatusBar from '../components/StatusBar';
 
 const Index = () => {
+  // Default center coordinates (can be changed to any location)
+  const defaultCenter: [number, number] = [51.505, -0.09];
+  const defaultZoom = 13;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="flex flex-col h-screen w-screen overflow-hidden">
+      <div className="flex flex-grow overflow-hidden">
+        <ToolBar />
+        <Sidebar />
+        <div className="flex-grow relative">
+          <Map center={defaultCenter} zoom={defaultZoom} />
+        </div>
       </div>
+      <StatusBar />
     </div>
   );
 };
