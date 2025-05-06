@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, useMap, ZoomControl } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import { LatLngTuple } from 'leaflet';
 
 interface MapProps {
@@ -35,8 +36,10 @@ const CoordinatesDisplay = () => {
 const Map: React.FC<MapProps> = ({ center, zoom }) => {
   return (
     <MapContainer 
-      center={center} 
-      zoom={zoom} 
+      key={`${center[0]}-${center[1]}-${zoom}`}
+      style={{ height: '100%', width: '100%' }}
+      center={center as [number, number]} 
+      zoom={zoom}
       zoomControl={false}
       className="w-full h-full"
     >
