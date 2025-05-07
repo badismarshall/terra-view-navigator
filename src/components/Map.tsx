@@ -2,7 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, useMap, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { LatLngTuple } from 'leaflet';
+import L, { LatLngTuple } from 'leaflet';
+
+// This is a workaround for the leaflet icons issue
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 interface MapProps {
   center: LatLngTuple;
@@ -34,22 +47,26 @@ const CoordinatesDisplay = () => {
 };
 
 const Map: React.FC<MapProps> = ({ center, zoom }) => {
+  // Create a unique key for the MapContainer to force re-render when center/zoom change
+  const mapKey = `${center[0]}-${center[1]}-${zoom}`;
+  
   return (
-    <MapContainer 
-      key={`${center[0]}-${center[1]}-${zoom}`}
-      style={{ height: '100%', width: '100%' }}
-      center={center as [number, number]} 
-      zoom={zoom}
-      zoomControl={false}
-      className="w-full h-full"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <ZoomControl position="bottomleft" />
-      <CoordinatesDisplay />
-    </MapContainer>
+    <div style={{ height: '100%', width: '100%' }}>
+      <MapContainer 
+        key={mapKey}
+        center={center}
+        zoom={zoom}
+        zoomControl={false}
+        className="w-full h-full"
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <ZoomControl position="bottomleft" />
+        <CoordinatesDisplay />
+      </MapContainer>
+    </div>
   );
 };
 
